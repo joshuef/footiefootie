@@ -18,15 +18,13 @@ function( $, D3 )
             var stats = allData.stats;
             var drawTimes = stats.gamesPlayed - stats.gamesWon - stats.gamesLost;
 
-
             var winData = 
             [ 
-                { name : "W", value: stats.gamesWon }, 
-                { name : "D", value: stats.gamesPlayed - stats.gamesWon - stats.gamesLost },
-                { name : "L", value: stats.gamesLost  }
+                { name : "W", value: + stats.gamesWon }, 
+                { name : "D", value: + stats.gamesPlayed - stats.gamesWon - stats.gamesLost },
+                { name : "L", value: + stats.gamesLost  }
             ] ;
 
-            console.log( winData );
             this.makeDonut( winData, '.js-wdl', 16 );
 
 
@@ -37,6 +35,7 @@ function( $, D3 )
          * Make Donut
          * @param  { array } data    array of data to be parsed into a donut chart
          * @param  { string } element jquery selector to append the chart to
+         * @param  { int } thickness how thick an arc should we have? in px
          */
         makeDonut : function ( data, element, thickness )
         {
@@ -55,7 +54,7 @@ function( $, D3 )
             var height = width - margin.top - margin.bottom;
 
             var chart = d3.select( element )
-                        .append( 'svg')
+                        .append( 'svg' )
                         .attr( 'width' , width + margin.left + margin.right)
                         .attr( 'height' , height + margin.top + margin.bottom)
                         .append( 'g' )
@@ -106,7 +105,60 @@ function( $, D3 )
                      return arc(d);
                     }
               });
-        }
+
+
+
+
+            //now lets animate the text
+
+
+            //if we append the name
+            chart.selectAll(".txt")
+                .data( data )
+                .enter()
+                .append("text")
+                .text( function( data )
+                {
+                    return data.name
+                } )
+                .attr("class", "txt")
+                .attr("x", 10)
+                .attr("y", function(d, i) 
+                {
+                    return 10 + i * 30
+                })
+
+            chart.selectAll(".value")
+                .data( data )
+                .enter()
+                .append("text")
+                .text( "0" )
+                .attr( "class", "value")
+                .attr( "x", 30)
+                .attr( "y", function(d, i) 
+                {
+                    return 10 + i * 30
+                })
+                .transition()
+                .duration( function( )
+                {
+                    //lets make this happen as swiftly as the arc (500 per data)
+                    return 500 * data.length;
+                } )
+                .tween( "text" , function( d ) 
+                {
+                    var i = d3.interpolate( this.textContent, d.value ),
+                        prec = (d + "").split("."),
+                        round = (prec.length > 1) ? Math.pow(10, prec[1].length) : 1;
+
+                    return function(t) 
+                    {
+                        this.textContent = Math.round(i(t) * round) / round;
+                    };
+                });
+
+            },
+              
 
     };
 
