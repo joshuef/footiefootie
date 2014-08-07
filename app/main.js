@@ -8,13 +8,14 @@ function( $, D3 )
 {
     var App = 
     {
+        /**
+         * Initialize the page
+         * 
+         */
         init : function ( )
         {
-            $('footer').append('jQuery ' + $.fn.jquery + ' loaded!<br>');
 
-            $('footer').append('D3 is here!');
-
-
+            //Let's set up our data
             var stats = allData.stats;
             var drawTimes = stats.gamesPlayed - stats.gamesWon - stats.gamesLost;
 
@@ -39,13 +40,70 @@ function( $, D3 )
                 { name: "remains", value: 100 - stats.averagePossession }
             ];
 
+
+            var goalsFor =
+            [
+                //rounding to 2dp
+                { name: "goalsFor", value: + stats.goals / stats.gamesPlayed  }
+            ];
+
+            var goalsAgainst =
+            [
+                { name: "goalsAgainst", value: Math.round( ( stats.goalsConceded / stats.gamesPlayed ) * 10) / 10 }
+            ];
+
+
+            //So let's build the charts now
             this.makeDonut( winData, '.js-wdl', 16 );
             this.makeDonut( passingData, '.js-passing-accuracy', 16, true );
             this.makeDonut( posessionData, '.js-posession', 16, true );
 
-
+            this.makeNumberChart( goalsFor, '.js-goals' );
+            this.makeNumberChart( goalsAgainst, '.js-goals--conceded' );
             
         },
+
+
+        /**
+         * Make Number Chart
+         *
+         * Bulds an animates just a numerical statistic, using the animateNumber
+         * method
+         * @param  { array }  data    array of data to be parsed into a donut chart
+         * @param  {element } element d3 selector for html element
+         */
+        makeNumberChart : function( data, element )
+        {
+            // Lets make the chart spacious
+            var margin = 
+            {
+                top:    10, 
+                right:  10, 
+                bottom: 10, 
+                left:   10
+            };
+
+            //set our general sizes
+            var width = 260 - margin.left - margin.right;
+            var height = width - margin.top - margin.bottom;
+
+
+            var chart = d3.select( element )
+                .append( 'svg' )
+                .attr( 'width' , width + margin.left + margin.right)
+                .attr( 'height' , height + margin.top + margin.bottom)
+                .append( 'g' )
+                .attr('transform', 'translate(' + ( (width / 2 ) 
+                    + margin.left ) + ',' + ( ( height / 2 )
+                    + margin.top ) + ")");
+
+
+            this.animateValues( data, chart, false, true );
+
+
+        },
+
+        
 
         /**
          * Make Donut
@@ -147,63 +205,74 @@ function( $, D3 )
             this.animateValues( data, chart, percentage );
 
 
-            },
+        },
 
 
-            /**
-             * animateValues
-             * @param  { array } data    array of data to be parsed into a donut chart
-             * @param  { object } chart   d3 chart object
-             * @param  { boolean } percentage should we only show the percentage
-             */
-            animateValues : function( data, chart, percentage )
+        /**
+         * animateValues
+         * @param  { array } data    array of data to be parsed into a donut chart
+         * @param  { object } chart   d3 chart object
+         * @param  { boolean } percentage should we only show the percentage
+         */
+        animateValues : function( data, chart, percentage, show1dp )
+        {
+
+            if( percentage )
             {
-
-                if( percentage )
-                {
-                    //lets only show the first value, the percentage
-                    data = data.splice( 0,1 );
-                }
-
-
-                chart.selectAll( ".value" )
-                    .data( data )
-                    .enter()
-                    .append( "text" )
-                    .text( "0" )
-                    .attr( "class", "value")
-                    .attr( "x", 30)
-                    .attr( "y", function(d, i) 
-                    {
-                        return 10 + i * 30
-                    })
-                    .transition()
-                    .duration( function( )
-                    {
-                        //lets make this happen as swiftly as the arc (500 per data)
-                        return 500 * data.length;
-                    } )
-                    .tween( "text" , function( d ) 
-                    {
-                        var i = d3.interpolate( this.textContent, d.value ),
-                            prec = (d + "").split("."),
-                            round = (prec.length > 1) ? Math.pow(10, prec[1].length) : 1;
-
-                        return function(t) 
-                        {
-                            if( percentage )
-                            {
-                                this.textContent = Math.round(i(t) * round) / round + "%";
-                            }
-                            else
-                            {
-                                this.textContent = Math.round(i(t) * round) / round;
-
-                            }
-                        };
-                    });
-                
+                //lets only show the first value, the percentage
+                data = data.splice( 0,1 );
             }
+
+
+            chart.selectAll( ".value" )
+                .data( data )
+                .enter()
+                .append( "text" )
+                .text( "0" )
+                .attr( "class", "value")
+                .attr( "x", 30)
+                .attr( "y", function(d, i) 
+                {
+                    return 10 + i * 30
+                })
+                .transition()
+                .duration( function( )
+                {
+                    //lets make this happen as swiftly as the arc (500 per data)
+                    return 500 * data.length;
+                } )
+                .tween( "text" , function( d ) 
+                {
+                    var i = d3.interpolate( this.textContent, d.value );
+                    var prec;
+
+                    if( show1dp)
+                    {
+                        prec = (d + "").split(".") + 1;
+                        
+                    }
+                    else
+                    {
+                        prec = (d + "").split(".");
+                    }
+
+                    var round = (prec.length > 1) ? Math.pow(10, prec[1].length) : 1;
+
+                    return function(t) 
+                    {
+                        if( percentage )
+                        {
+                            this.textContent = Math.round(i(t) * round) / round + "%";
+                        }
+                        else
+                        {
+                            this.textContent = Math.round(i(t) * round) / round;
+
+                        }
+                    };
+                });
+            
+        }
               
 
     };
