@@ -25,7 +25,23 @@ function( $, D3 )
                 { name : "L", value: + stats.gamesLost  }
             ] ;
 
+
+            var passingData =
+            [
+                { name: "passing accuracy", value: + stats.passingAccuracy },
+                { name: "remains", value: 100 - stats.passingAccuracy }
+            ];
+
+
+            var posessionData =
+            [
+                { name: "passing accuracy", value: + stats.averagePossession },
+                { name: "remains", value: 100 - stats.averagePossession }
+            ];
+
             this.makeDonut( winData, '.js-wdl', 16 );
+            this.makeDonut( passingData, '.js-passing-accuracy', 16, true );
+            this.makeDonut( posessionData, '.js-posession', 16, true );
 
 
             
@@ -36,8 +52,9 @@ function( $, D3 )
          * @param  { array } data    array of data to be parsed into a donut chart
          * @param  { string } element jquery selector to append the chart to
          * @param  { int } thickness how thick an arc should we have? in px
+         * @param  { boolean } percentage lets jsut display the %
          */
-        makeDonut : function ( data, element, thickness )
+        makeDonut : function ( data, element, thickness, percentage )
         {
 
             // Lets make the chart spacious
@@ -104,60 +121,89 @@ function( $, D3 )
                        d.endAngle = i(t);
                      return arc(d);
                     }
-              });
-
-
-
-
-            //now lets animate the text
-
-
-            //if we append the name
-            chart.selectAll(".txt")
-                .data( data )
-                .enter()
-                .append("text")
-                .text( function( data )
-                {
-                    return data.name
-                } )
-                .attr("class", "txt")
-                .attr("x", 10)
-                .attr("y", function(d, i) 
-                {
-                    return 10 + i * 30
-                })
-
-            chart.selectAll(".value")
-                .data( data )
-                .enter()
-                .append("text")
-                .text( "0" )
-                .attr( "class", "value")
-                .attr( "x", 30)
-                .attr( "y", function(d, i) 
-                {
-                    return 10 + i * 30
-                })
-                .transition()
-                .duration( function( )
-                {
-                    //lets make this happen as swiftly as the arc (500 per data)
-                    return 500 * data.length;
-                } )
-                .tween( "text" , function( d ) 
-                {
-                    var i = d3.interpolate( this.textContent, d.value ),
-                        prec = (d + "").split("."),
-                        round = (prec.length > 1) ? Math.pow(10, prec[1].length) : 1;
-
-                    return function(t) 
-                    {
-                        this.textContent = Math.round(i(t) * round) / round;
-                    };
                 });
 
+
+            if( ! percentage )
+            {
+                //then lets add the data.name for each data point
+                chart.selectAll(".txt")
+                    .data( data )
+                    .enter()
+                    .append("text")
+                    .text( function( data )
+                    {
+                        return data.name
+                    } )
+                    .attr("class", "txt")
+                    .attr("x", 10)
+                    .attr("y", function(d, i) 
+                    {
+                        return 10 + i * 30
+                    })
+            }
+
+
+            this.animateValues( data, chart, percentage );
+
+
             },
+
+
+            /**
+             * animateValues
+             * @param  { array } data    array of data to be parsed into a donut chart
+             * @param  { object } chart   d3 chart object
+             * @param  { boolean } percentage should we only show the percentage
+             */
+            animateValues : function( data, chart, percentage )
+            {
+
+                if( percentage )
+                {
+                    //lets only show the first value, the percentage
+                    data = data.splice( 0,1 );
+                }
+
+
+                chart.selectAll( ".value" )
+                    .data( data )
+                    .enter()
+                    .append( "text" )
+                    .text( "0" )
+                    .attr( "class", "value")
+                    .attr( "x", 30)
+                    .attr( "y", function(d, i) 
+                    {
+                        return 10 + i * 30
+                    })
+                    .transition()
+                    .duration( function( )
+                    {
+                        //lets make this happen as swiftly as the arc (500 per data)
+                        return 500 * data.length;
+                    } )
+                    .tween( "text" , function( d ) 
+                    {
+                        var i = d3.interpolate( this.textContent, d.value ),
+                            prec = (d + "").split("."),
+                            round = (prec.length > 1) ? Math.pow(10, prec[1].length) : 1;
+
+                        return function(t) 
+                        {
+                            if( percentage )
+                            {
+                                this.textContent = Math.round(i(t) * round) / round + "%";
+                            }
+                            else
+                            {
+                                this.textContent = Math.round(i(t) * round) / round;
+
+                            }
+                        };
+                    });
+                
+            }
               
 
     };
