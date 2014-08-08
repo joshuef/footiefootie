@@ -29,14 +29,14 @@ function( $, D3 )
 
             var passingData =
             [
-                { name: "passing accuracy", value: + stats.passingAccuracy },
+                { name: "Passing accuracy", value: + stats.passingAccuracy },
                 { name: "remains", value: 100 - stats.passingAccuracy }
             ];
 
 
             var posessionData =
             [
-                { name: "passing accuracy", value: + stats.averagePossession },
+                { name: "Posession", value: + stats.averagePossession },
                 { name: "remains", value: 100 - stats.averagePossession }
             ];
 
@@ -44,12 +44,12 @@ function( $, D3 )
             var goalsFor =
             [
                 //rounding to 2dp
-                { name: "goalsFor", value: + stats.goals / stats.gamesPlayed  }
+                { name: "Goals", value: + stats.goals / stats.gamesPlayed  }
             ];
 
             var goalsAgainst =
             [
-                { name: "goalsAgainst", value: Math.round( ( stats.goalsConceded / stats.gamesPlayed ) * 10) / 10 }
+                { name: "Goals Conceded", value: Math.round( ( stats.goalsConceded / stats.gamesPlayed ) * 10) / 10 }
             ];
 
 
@@ -103,7 +103,7 @@ function( $, D3 )
 
         },
 
-        
+
 
         /**
          * Make Donut
@@ -143,6 +143,7 @@ function( $, D3 )
 
             //Define our colour scheme here
             var color = d3.scale.ordinal()
+                // green / grey / red
                 .range( [ "#2FA843",  "#E6E6E6",  "#D4000F" ] );
 
             var arc = d3.svg.arc()
@@ -194,10 +195,10 @@ function( $, D3 )
                         return data.name
                     } )
                     .attr("class", "txt")
-                    .attr("x", 10)
+                    .attr("x", - 30 )
                     .attr("y", function(d, i) 
                     {
-                        return 10 + i * 30
+                        return  - 35 + i * 50
                     })
             }
 
@@ -219,7 +220,7 @@ function( $, D3 )
 
             if( percentage )
             {
-                //lets only show the first value, the percentage
+                //lets only show the first value, which is the percentage
                 data = data.splice( 0,1 );
             }
 
@@ -229,11 +230,40 @@ function( $, D3 )
                 .enter()
                 .append( "text" )
                 .text( "0" )
-                .attr( "class", "value")
-                .attr( "x", 30)
+                .attr( "class", function( d,i )
+                {
+                    if( percentage )
+                    {
+                        return "value  percentage"
+                    }
+                    else
+                    {
+                        return "value"
+                        
+                    }
+                })
+                // .attr( "fill", "#2FA843")
+                .attr( "x", function()
+                    {
+                        if( percentage )
+                        {
+                            return - 55 //match the font size
+                        }
+                        if( show1dp )
+                        {
+                            return - 60
+                        }
+                    } )
                 .attr( "y", function(d, i) 
                 {
-                    return 10 + i * 30
+                    if( ! percentage && ! show1dp )
+                    {
+                        return  - 35 + i * 50;
+                    }
+                    else
+                    {
+                        return  20 ;
+                    }
                 })
                 .transition()
                 .duration( function( )
@@ -241,6 +271,7 @@ function( $, D3 )
                     //lets make this happen as swiftly as the arc (500 per data)
                     return 500 * data.length;
                 } )
+                    //And now we do the actual text animations.
                 .tween( "text" , function( d ) 
                 {
                     var i = d3.interpolate( this.textContent, d.value );

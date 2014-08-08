@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>A simple d3 stats page</title>
+  <link rel="stylesheet" href="style.css">
   <script data-main="app/config" src="bower_components/requirejs/require.js"></script>
   <script class="our-stats" type="text/javascript">
     //I'm including stats here as a javascript object, because the stat.json file isn't valid json.
@@ -56,16 +57,17 @@
   </script>
 </head>
 <body>
-    <h1>footie running!</h1>
-
-    <div class="stats-area">
-        <h2>Top Stats (Average Per Match)</h2>
-        <div class="js-goals  stat-area"></div>
-        <div class="js-goals--conceded  stat-area"></div>
-        <div class="js-wdl wdl"></div>
-        <div class="js-passing-accuracy  stat-area"></div>
-        <div class="js-posession  stat-area"></div>
-        <div class="See All Stats"></div>
+    <div class="stats">
+        <h2 class="stats__header">Top Stats (Average Per Match)</h2>
+        <div class="stats__area">
+            <div class="js-goals  stats__area__region"></div>
+            <div class="js-goals--conceded  stats__area__region"></div>
+            <div class="js-wdl wdl"></div>
+            <div class="js-passing-accuracy  stats__area__region"></div>
+            <div class="js-posession  stats__area__region"></div>
+            
+        </div>
+        <div class="stats__header">See All Stats</div>
       
     </div>
 </body>

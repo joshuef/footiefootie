@@ -1,0 +1,122 @@
+html
+{
+    font-size:  62.5%;
+    background-color: #E2E2E2;
+}
+
+body
+{
+    width:      80%;
+    max-width:  980px;
+    padding:    1rem;
+    display:    block;
+    margin:     0 auto;
+    /*I'm not sure of the font, so let's go with Helvetica */
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+
+
+
+/* The Stats Area */
+.stats
+{
+    text-align:         center;
+    background-color:   #fff;
+    /* prefixes not needed for modern browsers */
+    border-radius:      2px; 
+    box-shadow:         0px 2px #D0D0D0;
+    margin-bottom:      4rem; 
+    padding-bottom:     4rem;   
+}
+
+.stats__header
+{
+    font-size:          4rem;
+    text-align:         left;
+    color:              #2EA341;
+    padding-top:        2rem;
+    padding-left:       2rem;
+    text-transform:     uppercase;
+    font-weight:        normal;
+}
+
+.stats__area
+{
+    display:        block;
+    border-top:     5px solid #E2E2E2;
+    color:          #E2E2E2;
+}
+
+.stats__area__region
+{
+    font-size:      7rem;
+    width:          49%;
+    display:        inline-block;
+    position:       relative;
+}
+
+.stats__area__region:first-child:before,
+.stats__area__region:first-child:after,
+.stats__area__region:last-child:before,
+.stats__area__region:last-child:after
+{
+    /*using a pseudo element for the 'borders' gives us more control*/
+    content:            '';
+    display:            block;
+    background-color:   #E2E2E2;
+    height:             80%;
+    width:              2px;
+    position:           absolute;
+    right:              -1px;
+    top:                10%;
+}
+
+/*the bottom border of the first child*/
+.stats__area__region:first-child:after,
+.stats__area__region:last-child:after
+{
+    width:              55%;
+    height:             2px;
+    right:              auto;
+    left:               10%;
+    bottom:             -120px;
+    top:                auto;
+}
+.stats__area__region:last-child:before
+{
+    right:              auto;
+    left:               0;
+}
+.stats__area__region:last-child:after
+{
+    bottom:             auto;
+    top:                -120px;
+    right: 10%;
+    left: auto;
+}
+
+
+
+text.value 
+{
+    fill:           #2FA843;
+}
+
+.wdl .value,
+.txt
+{
+    font-size:      4rem;
+}
+
+
+
+.percentage
+{
+    font-size:      5.5rem;
+
+}
+
+
+
+
