@@ -194,8 +194,27 @@ function( $, D3 )
                     {
                         return data.name
                     } )
-                    .attr("class", "txt")
-                    .attr("x", - 30 )
+                    .attr("class", function(d, i )
+                        {
+                            return "txt" + "  wdl-" + i
+                        })
+                    .attr("x", function(d, i) 
+                    {
+
+                        //align wdl
+                        if( i == 0 )
+                        {
+                            return -40
+                        }
+                        if( i == 1 )
+                        {
+                            return -35
+                        }
+                        if( i == 2 )
+                        {
+                            return -30
+                        }
+                    })
                     .attr("y", function(d, i) 
                     {
                         return  - 35 + i * 50
@@ -225,6 +244,7 @@ function( $, D3 )
             }
 
 
+            // and then the values
             chart.selectAll( ".value" )
                 .data( data )
                 .enter()
@@ -243,15 +263,20 @@ function( $, D3 )
                     }
                 })
                 // .attr( "fill", "#2FA843")
-                .attr( "x", function()
+                .attr( "x", function( d, i )
                     {
                         if( percentage )
                         {
                             return - 55 //match the font size
                         }
-                        if( show1dp )
+                        else if( show1dp )
                         {
                             return - 60
+                        }
+                        else
+                        {
+                            // Our central chart. Let's align the values   
+                            return 20 - 10 * d.value.toString().length 
                         }
                     } )
                 .attr( "y", function(d, i) 
@@ -259,6 +284,10 @@ function( $, D3 )
                     if( ! percentage && ! show1dp )
                     {
                         return  - 35 + i * 50;
+                    }
+                    else if( show1dp)
+                    {
+                        return  60 ;
                     }
                     else
                     {

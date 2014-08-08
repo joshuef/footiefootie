@@ -26,26 +26,29 @@ body
     /* prefixes not needed for modern browsers */
     border-radius:      2px; 
     box-shadow:         0px 2px #D0D0D0;
-    margin-bottom:      4rem; 
+    margin-bottom:      7rem; 
     padding-bottom:     4rem;   
 }
 
 .stats__header
 {
-    font-size:          4rem;
+    font-size:          3.5rem;
     text-align:         left;
     color:              #2EA341;
     padding-top:        2rem;
-    padding-left:       2rem;
+    padding-left:       4rem;
     text-transform:     uppercase;
     font-weight:        normal;
+    position:           relative;
 }
 
 .stats__area
 {
-    display:        block;
-    border-top:     5px solid #E2E2E2;
-    color:          #E2E2E2;
+    display:            block;
+    border-bottom:      5px solid #E2E2E2;
+    color:              #E2E2E2;
+    margin-bottom:      2rem;
+    padding-bottom:     4rem;
 }
 
 .stats__area__region
@@ -56,15 +59,19 @@ body
     position:       relative;
 }
 
+
+
+/* Stats borders */
 .stats__area__region:first-child:before,
 .stats__area__region:first-child:after,
 .stats__area__region:last-child:before,
-.stats__area__region:last-child:after
+.stats__area__region:last-child:after,
+.stats__header:first-child:after
 {
     /*using a pseudo element for the 'borders' gives us more control*/
     content:            '';
     display:            block;
-    background-color:   #E2E2E2;
+    background-color:   #CCCCCC;
     height:             80%;
     width:              2px;
     position:           absolute;
@@ -74,7 +81,8 @@ body
 
 /*the bottom border of the first child*/
 .stats__area__region:first-child:after,
-.stats__area__region:last-child:after
+.stats__area__region:last-child:after,
+.stats__header:first-child:after
 {
     width:              55%;
     height:             2px;
@@ -88,19 +96,36 @@ body
     right:              auto;
     left:               0;
 }
-.stats__area__region:last-child:after
+.stats__area__region:last-child:after,
+.stats__header:first-child:after
 {
     bottom:             auto;
     top:                -120px;
-    right: 10%;
-    left: auto;
+    right:              10%;
+    left:               auto;
 }
 
 
+.stats__header:first-child:after
+{
+    top: auto;
+    bottom: -1rem;
+    width: 90%;
+    right: 5%;
+}
 
-text.value 
+
+/* Wins Draws Losses */
+.wdl-0.txt,
+.value 
 {
     fill:           #2FA843;
+}
+
+.wdl-2.txt,
+.goals--conceded .value
+{
+    fill:           #D4000F;
 }
 
 .wdl .value,
@@ -108,9 +133,22 @@ text.value
 {
     font-size:      4rem;
 }
+.wdl .value
+{
+    fill: #666666;
+}
+
+.wdl .wdl-1.txt,
+{
+    /* draw grey */
+    fill: #E6E6E6;
+}
 
 
 
+
+
+/* Percentage styles*/
 .percentage
 {
     font-size:      5.5rem;
@@ -119,4 +157,32 @@ text.value
 
 
 
+
+
+/*  Stats titles */
+.stats__area__title
+{
+    font-size:          2rem;
+    font-weight:        normal;
+    position:           absolute;
+    top:                0;
+    width:              100%;
+    text-align:         center;
+    color:              #818181;
+}
+
+.possession .stats__area__title,
+.passing .stats__area__title
+{
+    top:                auto;
+    bottom:             -3rem;
+}
+
+
+
+.stats__header:last-child
+{
+    text-align:         center;
+    padding-left:       0;
+}
 
