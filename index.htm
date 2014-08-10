@@ -2,12 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
   <title>A simple d3 stats page</title>
   <link rel="stylesheet" href="style.css">
   <script data-main="app/config" src="bower_components/requirejs/require.js"></script>
   <script class="our-stats" type="text/javascript">
-    //I'm including stats here as a javascript object, because the stat.json file isn't valid json.
+    //I'm including stats here as a javascript object, because the stat.json file isn't valid json. I would otherwise have used the d3.json() method, or jQuery's $.ajax, but both were chucking errors with this. So forgive this crude workaround!
     
+
     allData = 
     {
       meta: {
