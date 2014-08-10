@@ -14,7 +14,19 @@ function( $, D3 )
          */
         init : function ( )
         {
+            var self = this;
+            this.setupCharts();
 
+        },
+
+
+        /**
+        * Set up charts
+        *
+        * Parses data and initialises the chart set up functions
+        */
+        setupCharts : function ( )
+        {
             //Let's set up our data
             var stats = allData.stats;
             var drawTimes = stats.gamesPlayed - stats.gamesWon - stats.gamesLost;
@@ -61,6 +73,7 @@ function( $, D3 )
             this.makeNumberChart( goalsFor, '.js-goals' );
             this.makeNumberChart( goalsAgainst, '.js-goals--conceded' );
             
+
         },
 
 
@@ -90,12 +103,15 @@ function( $, D3 )
 
             var chart = d3.select( element )
                 .append( 'svg' )
-                .attr( 'width' , width + margin.left + margin.right)
-                .attr( 'height' , height + margin.top + margin.bottom)
+                .attr( 'width' , "100%" )
+                .attr( 'height' , "100%" )
+                .attr('viewBox','0 0 '+Math.min(width,height)+' '+Math.min(width,height))
+                .attr('preserveAspectRatio','xMinYMin')
                 .append( 'g' )
-                .attr('transform', 'translate(' + ( (width / 2 ) 
-                    + margin.left ) + ',' + ( ( height / 2 )
-                    + margin.top ) + ")");
+                    .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")");
+                // .attr('transform', 'translate(' + ( (width / 2 ) 
+                //     + margin.left ) + ',' + ( ( height / 2 )
+                //     + margin.top ) + ")");
 
 
             this.animateValues( data, chart, false, true );
@@ -124,18 +140,20 @@ function( $, D3 )
                 left:   10
             };
 
+            var bodyWidth = $( 'body' ).width();
+
             //set our general sizes
-            var width = 260 - margin.left - margin.right;
+            var width = bodyWidth / 3 - margin.left - margin.right;
             var height = width - margin.top - margin.bottom;
 
             var chart = d3.select( element )
                         .append( 'svg' )
-                        .attr( 'width' , width + margin.left + margin.right)
-                        .attr( 'height' , height + margin.top + margin.bottom)
-                        .append( 'g' )
-                        .attr('transform', 'translate(' + ( (width / 2 ) 
-                            + margin.left ) + ',' + ( ( height / 2 )
-                            + margin.top ) + ")");
+                        .attr( 'width' , "100%" )
+                .attr( 'height' , "100%" )
+                .attr('viewBox','0 0 '+Math.min(width,height)+' '+Math.min(width,height))
+                .attr('preserveAspectRatio','xMinYMin')
+                .append( 'g' )
+                    .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")");
 
 
             var radius = Math.min( width, height ) / 2;
@@ -148,7 +166,7 @@ function( $, D3 )
 
             var arc = d3.svg.arc()
                     .outerRadius( radius )
-                    .innerRadius( radius - thickness ); //16px thick
+                    .innerRadius( radius - width /16 ); 
 
             var pie = d3.layout.pie()
                     .sort( null )
@@ -204,20 +222,20 @@ function( $, D3 )
                         //align wdl
                         if( i == 0 )
                         {
-                            return -40
+                            return - 20
                         }
                         if( i == 1 )
                         {
-                            return -35
+                            return -18
                         }
                         if( i == 2 )
                         {
-                            return -30
+                            return -17
                         }
                     })
                     .attr("y", function(d, i) 
                     {
-                        return  - 35 + i * 50
+                        return  - 15 + i * 20
                     })
             }
 
@@ -262,36 +280,35 @@ function( $, D3 )
                         
                     }
                 })
-                // .attr( "fill", "#2FA843")
                 .attr( "x", function( d, i )
                     {
                         if( percentage )
                         {
-                            return - 55 //match the font size
+                            return - 28 
                         }
                         else if( show1dp )
                         {
-                            return - 60
+                            return - 50
                         }
                         else
                         {
                             // Our central chart. Let's align the values   
-                            return 20 - 10 * d.value.toString().length 
+                            return  5 + ( -3 * d.value.toString().length ) 
                         }
                     } )
                 .attr( "y", function(d, i) 
                 {
                     if( ! percentage && ! show1dp )
                     {
-                        return  - 35 + i * 50;
+                        return  - 15 + i * 20;
                     }
-                    else if( show1dp)
+                    else if( show1dp )
                     {
-                        return  60 ;
+                        return  100 ;
                     }
                     else
                     {
-                        return  20 ;
+                        return  10 ;
                     }
                 })
                 .transition()
@@ -336,6 +353,8 @@ function( $, D3 )
               
 
     };
+
+
 
     App.init()
 });
