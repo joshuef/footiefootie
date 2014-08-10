@@ -57,6 +57,7 @@ body
 {
     font-size:          8rem;
     width:              49%;
+    height:             13.7rem;
     display:            inline-block;
     position:           relative;
     padding-bottom:     10rem;
@@ -142,6 +143,7 @@ body
 {
     position:           absolute;
     width:              20rem;
+    height:             20rem;   
     top:                16.5rem;
     left:               22.5rem;
     background-color:   white;
