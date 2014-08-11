@@ -66,9 +66,9 @@ function( $, D3 )
 
 
             //So let's build the charts now
-            this.makeDonut( winData, '.js-wdl', 16 );
-            this.makeDonut( passingData, '.js-passing-accuracy', 16, true );
-            this.makeDonut( posessionData, '.js-posession', 16, true );
+            this.makeDonut( winData, '.js-wdl', 200 );
+            this.makeDonut( passingData, '.js-passing-accuracy', 140, true );
+            this.makeDonut( posessionData, '.js-posession', 140, true );
 
             this.makeNumberChart( goalsFor, '.js-goals' );
             this.makeNumberChart( goalsAgainst, '.js-goals--conceded' );
@@ -109,9 +109,6 @@ function( $, D3 )
                 .attr('preserveAspectRatio','xMinYMin')
                 .append( 'g' )
                     .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")");
-                // .attr('transform', 'translate(' + ( (width / 2 ) 
-                //     + margin.left ) + ',' + ( ( height / 2 )
-                //     + margin.top ) + ")");
 
 
             this.animateValues( data, chart, false, true );
@@ -125,34 +122,25 @@ function( $, D3 )
          * Make Donut
          * @param  { array } data    array of data to be parsed into a donut chart
          * @param  { string } element jquery selector to append the chart to
-         * @param  { int } thickness how thick an arc should we have? in px
+         * @param  { int } width how wide should the chart be in px
          * @param  { boolean } percentage lets jsut display the %
          */
-        makeDonut : function ( data, element, thickness, percentage )
+        makeDonut : function ( data, element, width, percentage )
         {
-
-            // Lets make the chart spacious
-            var margin = 
+            if ( ! width )
             {
-                top:    10, 
-                right:  10, 
-                bottom: 10, 
-                left:   10
-            };
+                width = 200;
+            }
 
-            var bodyWidth = $( 'body' ).width();
-
-            //set our general sizes
-            var width = bodyWidth / 3 - margin.left - margin.right;
-            var height = width - margin.top - margin.bottom;
+            var height = width; //lets make it a simple box
 
             var chart = d3.select( element )
-                        .append( 'svg' )
-                        .attr( 'width' , "100%" )
-                .attr( 'height' , "100%" )
-                .attr('viewBox','0 0 '+Math.min(width,height)+' '+Math.min(width,height))
-                .attr('preserveAspectRatio','xMinYMin')
-                .append( 'g' )
+                    .append( 'svg' )
+                    .attr( 'width' , width )
+                    .attr( 'height' , height )
+                    .attr('viewBox','0 0 '+Math.min(width,width)+' '+Math.min(width,height))
+                    .attr('preserveAspectRatio','xMinYMin')
+                    .append( 'g' )
                     .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")");
 
 
@@ -208,6 +196,7 @@ function( $, D3 )
                     .data( data )
                     .enter()
                     .append("text")
+                    .attr("text-anchor", "middle")
                     .text( function( data )
                     {
                         return data.name
@@ -219,23 +208,12 @@ function( $, D3 )
                     .attr("x", function(d, i) 
                     {
 
-                        //align wdl
-                        if( i == 0 )
-                        {
-                            return - 20
-                        }
-                        if( i == 1 )
-                        {
-                            return -18
-                        }
-                        if( i == 2 )
-                        {
-                            return -17
-                        }
+                        return  - 20 - i * 1.2;
+
                     })
                     .attr("y", function(d, i) 
                     {
-                        return  - 15 + i * 20
+                        return  - 25 + i * 35
                     })
             }
 
@@ -268,6 +246,7 @@ function( $, D3 )
                 .enter()
                 .append( "text" )
                 .text( "0" )
+                .attr("text-anchor", "middle")
                 .attr( "class", function( d,i )
                 {
                     if( percentage )
@@ -281,26 +260,21 @@ function( $, D3 )
                     }
                 })
                 .attr( "x", function( d, i )
+                {
+                    if( ! percentage && ! show1dp )
                     {
-                        if( percentage )
-                        {
-                            return - 28 
-                        }
-                        else if( show1dp )
-                        {
-                            return - 50
-                        }
-                        else
-                        {
-                            // Our central chart. Let's align the values   
-                            return  5 + ( -3 * d.value.toString().length ) 
-                        }
-                    } )
+                        return  15;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                } )
                 .attr( "y", function(d, i) 
                 {
                     if( ! percentage && ! show1dp )
                     {
-                        return  - 15 + i * 20;
+                        return  - 25 + i * 35;
                     }
                     else if( show1dp )
                     {
@@ -308,7 +282,7 @@ function( $, D3 )
                     }
                     else
                     {
-                        return  10 ;
+                        return  12 ;
                     }
                 })
                 .transition()

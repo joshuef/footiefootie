@@ -149,7 +149,7 @@ body
     background-color:   white;
     z-index:            10;
     padding:            2rem;
-    border-radius:      25%;
+    border-radius:      50%;
 }
 
 .wdl-0.txt,
@@ -167,7 +167,7 @@ body
 .wdl .value,
 .txt
 {
-    font-size:          2rem;
+    font-size:          3rem;
 }
 .wdl .value
 {
@@ -221,6 +221,8 @@ body
     text-align:         center;
     padding-left:       0;
 }
+
+
 
 
 

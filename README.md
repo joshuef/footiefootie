@@ -1,13 +1,13 @@
 # footie
 
-A simple d3 stats page
+A simple d3 stats page for FootballlllLLL!!!!!!!
 
 
 ## My Take 
 
 This was an interesting one, as I got to play play with some donut, charting which I'd never done before!
 
-I started out utilising the require.js yo generator, and then threw in the latest d3 to get something I could work with. (To get ie8 to work, you'd need to include something like 'aight' https://github.com/shawnbot/aight).
+I started out utilising the require.js yo generator (https://github.com/danheberden/yeoman-generator-requirejs), and then threw in the latest d3 to get something I could work with. (To get ie8 to work, you'd need to include something like 'aight' https://github.com/shawnbot/aight).
 
 Then it was a matter of setting up a chart generator for re-usability, and then importing the data. The json file sent isn't valid json, which means the normal methods of retrieving the data (d3.json / $.ajax ) failed, so I took the crude step of including the data in the html file. Crass, I know, but I figured retrieving the data from a server wasn't the main focus of the task.
 
